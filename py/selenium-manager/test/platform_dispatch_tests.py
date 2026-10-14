@@ -17,6 +17,7 @@
 
 import os
 import platform
+import shlex
 import stat
 import sys
 
@@ -148,7 +149,7 @@ def test_se_manager_path_binary_mode_is_left_alone(tmp_path, monkeypatch):
 def _run_main_recording_avoid_stats(tmp_path, monkeypatch):
     record = tmp_path / "avoid-stats.txt"
     binary = tmp_path / "selenium-manager"
-    binary.write_text(f'#!/bin/sh\nprintf "%s" "${{SE_AVOID_STATS-unset}}" > {record}\n')
+    binary.write_text(f'#!/bin/sh\nprintf "%s" "${{SE_AVOID_STATS-unset}}" > {shlex.quote(str(record))}\n')
     binary.chmod(0o755)
     monkeypatch.setenv("SE_MANAGER_PATH", str(binary))
     monkeypatch.setattr(sys, "argv", ["selenium-manager"])
